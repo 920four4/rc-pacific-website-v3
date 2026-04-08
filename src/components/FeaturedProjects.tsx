@@ -146,10 +146,7 @@ function ProjectCard({
             <div className="relative w-full h-full p-8">
               {/* Background Pattern */}
               <div className="absolute inset-0 opacity-10">
-                <div className="w-full h-full" style={{
-                  backgroundImage: `linear-gradient(${isEven ? '45deg' : '-45deg}, transparent 48%, ${project.color === 'orange' ? '#E85D04' : project.color === 'purple' ? '#a855f7' : '#3b82f6'} 49%, ${project.color === 'orange' ? '#E85D04' : project.color === 'purple' ? '#a855f7' : '#3b82f6'} 51%, transparent 52%)`,
-                  backgroundSize: '60px 60px',
-                }} />
+                <div className="w-full h-full striped-bg" style={{ backgroundSize: '60px 60px' }} data-color={project.color} data-direction={isEven ? '45deg' : '-45deg'} />
               </div>
               
               {/* Center Icon */}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram, ArrowRight } from "lucide-react";
+import { Phone, Mail, MapPin, ArrowRight, Globe } from "lucide-react";
 
 const footerLinks = {
   company: [
@@ -26,9 +26,9 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Linkedin, href: "https://linkedin.com/company/rc-pacific-construction", label: "LinkedIn" },
-  { icon: Facebook, href: "https://facebook.com/rcpacificconstruction", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Globe, href: "https://linkedin.com/company/rc-pacific-construction", label: "LinkedIn" },
+  { icon: Globe, href: "https://facebook.com/rcpacificconstruction", label: "Facebook" },
+  { icon: Globe, href: "#", label: "Instagram" },
 ];
 
 export default function Footer() {
