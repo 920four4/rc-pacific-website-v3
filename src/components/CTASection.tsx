@@ -1,101 +1,169 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, Phone, Mail, MapPin, Shield, BadgeCheck, Award } from "lucide-react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useRef } from "react";
+import { ArrowRight, Phone, Mail, MapPin, Clock } from "lucide-react";
 import Link from "next/link";
 
 export default function CTASection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden">
+    <section ref={containerRef} className="relative py-40 lg:py-56 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-navy via-navy-light to-navy" />
-      <div className="absolute inset-0 grid-pattern opacity-50" />
+      <div className="absolute inset-0 bg-navy-dark" />
       
-      {/* Gradient Orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange/10 rounded-full blur-3xl" />
+      {/* Animated Background */}
+      <motion.div 
+        className="absolute inset-0"
+        style={{ y: backgroundY }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(201,169,98,0.08),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(232,93,4,0.05),transparent_50%)]" />
+      </motion.div>
+
+      {/* Grid Pattern */}
+      <div className="absolute inset-0 grid-pattern opacity-10" />
+
+      {/* Diagonal Lines */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 0.03 } : {}}
+            transition={{ duration: 1, delay: i * 0.1 }}
+            className="absolute h-[1px] w-[200%] bg-gold"
+            style={{ 
+              top: `${10 + i * 10}%`, 
+              transform: `rotate(${-20 + i}deg)`,
+              left: "-50%",
+            }}
+          />
+        ))}
+      </div>
 
       <div className="relative max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left - Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          {/* Left - Main CTA */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/30 text-gold text-sm tracking-wider mb-6">
-              <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
-              READY TO START?
-            </span>
+            {/* Pre-title */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.2 }}
+              className="flex items-center gap-4 mb-8"
+            >
+              <motion.div 
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-3 h-3 bg-orange rounded-full" 
+              />
+              <span className="text-gold text-sm tracking-[0.3em] uppercase font-semibold">
+                Ready to Build?
+              </span>
+            </motion.div>
 
-            <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-text-light leading-tight mb-6">
-              Let&apos;s Build
-              <span className="block text-gold">Something Great.</span>
+            {/* Main Title */}
+            <h2 className="text-5xl lg:text-7xl xl:text-8xl font-black text-text-light leading-[0.9] mb-8">
+              LET&apos;S START
+              <span 
+                className="block"
+                style={{
+                  background: "linear-gradient(135deg, #C9A962 0%, #E8D5A5 50%, #C9A962 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                YOUR PROJECT
+              </span>
             </h2>
 
-            <p className="text-lg text-text-muted leading-relaxed mb-8 max-w-lg">
+            {/* Description */}
+            <p className="text-xl text-text-muted leading-relaxed mb-10 max-w-lg">
               Whether you&apos;re launching one location or rolling out twenty, RC Pacific brings 
-              the expertise, resources, and commitment to make it happen—on time, on budget, 
-              and to the standards America&apos;s biggest brands expect.
+              the expertise, resources, and commitment to make it happen—on time, on budget.
             </p>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-4 mb-10">
-              <div className="flex items-center gap-2 text-text-muted text-sm">
-                <Shield className="w-4 h-4 text-gold" />
-                Licensed & Insured
-              </div>
-              <div className="flex items-center gap-2 text-text-muted text-sm">
-                <BadgeCheck className="w-4 h-4 text-gold" />
-                Bonded Contractor
-              </div>
-              <div className="flex items-center gap-2 text-text-muted text-sm">
-                <Award className="w-4 h-4 text-gold" />
-                37 Years Experience
-              </div>
-            </div>
-
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-wrap gap-4 mb-12">
               <Link
                 href="/contact"
-                className="group inline-flex items-center justify-center gap-3 bg-gold text-navy-dark px-8 py-4 font-bold text-lg hover:bg-gold-light transition-all duration-300 hover:shadow-[0_0_40px_rgba(201,169,98,0.5)] animate-pulse-glow"
+                className="group relative inline-flex items-center gap-3 bg-gold text-navy-dark px-8 py-5 font-bold text-lg overflow-hidden"
               >
-                Get Your Quote
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                <span className="relative z-10">GET YOUR QUOTE</span>
+                <ArrowRight className="w-5 h-5 relative z-10 transition-transform group-hover:translate-x-1" />
+                <motion.div
+                  className="absolute inset-0 bg-white"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
               </Link>
+
               <a
                 href="tel:9167825682"
-                className="inline-flex items-center justify-center gap-3 border border-gold/50 text-gold px-8 py-4 font-semibold text-lg hover:bg-gold/10 transition-all duration-300"
+                className="group inline-flex items-center gap-3 border-2 border-gold/30 text-gold px-8 py-5 font-semibold text-lg hover:border-gold hover:bg-gold/10 transition-all"
               >
                 <Phone className="w-5 h-5" />
                 (916) 782-5682
               </a>
             </div>
+
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap gap-6 text-sm text-text-muted">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-gold rounded-full" />
+                Licensed & Insured
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-gold rounded-full" />
+                37 Years Experience
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-orange rounded-full" />
+                24/7 Emergency Available
+              </div>
+            </div>
           </motion.div>
 
-          {/* Right - Contact Card */}
+          {/* Right - Contact Info Card */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="bg-navy-light/50 backdrop-blur-sm border border-gold/30 p-8 lg:p-10">
-              <h3 className="text-2xl font-bold text-text-light mb-6">
-                Contact Information
+            <div className="relative bg-navy-light/40 backdrop-blur-md border border-gold/20 p-8 lg:p-12">
+              {/* Corner Accents */}
+              <div className="absolute -top-px -left-px w-8 h-8 border-t-2 border-l-2 border-gold" />
+              <div className="absolute -top-px -right-px w-8 h-8 border-t-2 border-r-2 border-gold" />
+              <div className="absolute -bottom-px -left-px w-8 h-8 border-b-2 border-l-2 border-gold" />
+              <div className="absolute -bottom-px -right-px w-8 h-8 border-b-2 border-r-2 border-gold" />
+
+              <h3 className="text-2xl font-bold text-text-light mb-8 tracking-wide">
+                CONTACT INFORMATION
               </h3>
 
               <div className="space-y-6">
                 {/* Phone */}
                 <a href="tel:9167825682" className="flex items-start gap-4 group">
-                  <div className="w-12 h-12 bg-gold/10 border border-gold/30 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                    <Phone className="w-5 h-5 text-gold" />
+                  <div className="w-14 h-14 bg-gold/10 border border-gold/30 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                    <Phone className="w-6 h-6 text-gold" />
                   </div>
                   <div>
                     <div className="text-text-muted text-sm mb-1">Phone</div>
-                    <div className="text-text-light font-semibold text-lg group-hover:text-gold transition-colors">
+                    <div className="text-text-light text-2xl font-bold group-hover:text-gold transition-colors">
                       (916) 782-5682
                     </div>
                   </div>
@@ -103,12 +171,12 @@ export default function CTASection() {
 
                 {/* Email */}
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gold/10 border border-gold/30 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-gold" />
+                  <div className="w-14 h-14 bg-gold/10 border border-gold/30 flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-gold" />
                   </div>
                   <div>
                     <div className="text-text-muted text-sm mb-1">Email</div>
-                    <div className="text-text-light font-semibold text-lg">
+                    <div className="text-text-light text-xl font-bold">
                       info@rcpacific.com
                     </div>
                   </div>
@@ -121,43 +189,57 @@ export default function CTASection() {
                   rel="noopener noreferrer"
                   className="flex items-start gap-4 group"
                 >
-                  <div className="w-12 h-12 bg-gold/10 border border-gold/30 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                    <MapPin className="w-5 h-5 text-gold" />
+                  <div className="w-14 h-14 bg-gold/10 border border-gold/30 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                    <MapPin className="w-6 h-6 text-gold" />
                   </div>
                   <div>
                     <div className="text-text-muted text-sm mb-1">Headquarters</div>
-                    <div className="text-text-light font-semibold group-hover:text-gold transition-colors">
+                    <div className="text-text-light text-xl font-bold group-hover:text-gold transition-colors">
                       7070 Galilee Rd
                     </div>
-                    <div className="text-text-light">
+                    <div className="text-text-muted">
                       Roseville, CA 95678
                     </div>
                   </div>
                 </a>
-              </div>
 
-              {/* Hours */}
-              <div className="mt-8 pt-6 border-t border-gold/20">
-                <div className="text-gold text-sm tracking-wider mb-2">BUSINESS HOURS</div>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="text-text-muted">Monday - Friday</div>
-                  <div className="text-text-light text-right">7:00 AM - 5:00 PM</div>
-                  <div className="text-text-muted">Saturday</div>
-                  <div className="text-text-light text-right">By Appointment</div>
-                  <div className="text-text-muted">Sunday</div>
-                  <div className="text-text-light text-right">Closed</div>
+                {/* Hours */}
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 bg-gold/10 border border-gold/30 flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-gold" />
+                  </div>
+                  <div>
+                    <div className="text-text-muted text-sm mb-1">Hours</div>
+                    <div className="text-text-light font-bold">
+                      Mon - Fri: 7AM - 5PM
+                    </div>
+                    <div className="text-text-muted text-sm">
+                      24/7 Emergency Available
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Emergency */}
-              <div className="mt-6 p-4 bg-orange/10 border border-orange/30">
-                <div className="text-orange text-sm font-semibold mb-1">24/7 Emergency Services</div>
-                <div className="text-text-muted text-sm">
-                  For urgent repairs and emergency construction needs
+              {/* Coverage Badge */}
+              <div className="mt-8 pt-8 border-t border-gold/10">
+                <div className="text-gold text-xs tracking-wider mb-3">COVERAGE AREA</div>
+                <div className="flex flex-wrap gap-2">
+                  {["CA", "AZ", "NV", "WA", "TX", "CO"].map((state) => (
+                    <span key={state} className="px-3 py-1 bg-gold/10 text-gold text-sm font-semibold border border-gold/20">
+                      {state}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
           </motion.div>
+        </div>
+      </div>
+
+      {/* Giant Watermark */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none overflow-hidden w-full">
+        <div className="text-[25vw] font-black text-gold/[0.02] tracking-tighter whitespace-nowrap leading-none translate-y-1/3">
+          BUILD
         </div>
       </div>
     </section>
